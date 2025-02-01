@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Number Guessing Game</title>
+  <title>Productive Daily Routine Game</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -23,13 +23,22 @@
     h1 {
       color: #333;
     }
-    input {
+    .task {
+      margin: 10px 0;
       padding: 10px;
-      font-size: 16px;
-      width: 80%;
-      margin-bottom: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
+      background-color: #f9f9f9;
+      cursor: pointer;
+    }
+    .task.completed {
+      background-color: #d4edda;
+      text-decoration: line-through;
+    }
+    .score {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
     }
     button {
       padding: 10px 20px;
@@ -39,51 +48,50 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      margin-top: 20px;
     }
     button:hover {
       background-color: #218838;
-    }
-    .message {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #333;
     }
   </style>
 </head>
 <body>
   <div class="game-container">
-    <h1>Number Guessing Game</h1>
-    <p>Guess a number between 1 and 100:</p>
-    <input type="number" id="guessInput" placeholder="Enter your guess">
-    <button onclick="checkGuess()">Submit Guess</button>
-    <p class="message" id="message"></p>
+    <h1>Productive Daily Routine Game</h1>
+    <p>Complete your daily tasks to build a productive routine!</p>
+    <div id="tasks">
+      <div class="task" data-task="exercise">🏋️‍♂️ Exercise for 30 minutes</div>
+      <div class="task" data-task="work">💻 Work on important tasks</div>
+      <div class="task" data-task="meditate">🧘‍♂️ Meditate for 10 minutes</div>
+      <div class="task" data-task="break">☕ Take a 5-minute break</div>
+      <div class="task" data-task="read">📚 Read for 20 minutes</div>
+    </div>
+    <div class="score">Score: <span id="score">0</span></div>
+    <button onclick="resetGame()">Reset Game</button>
   </div>
 
   <script>
-    // Generate a random number between 1 and 100
-    const randomNumber = Math.floor(Math.random() * 100) + 1;
-    let attempts = 0;
+    let score = 0;
+    const tasks = document.querySelectorAll('.task');
+    const scoreElement = document.getElementById('score');
 
-    function checkGuess() {
-      const guess = parseInt(document.getElementById('guessInput').value);
-      const message = document.getElementById('message');
+    tasks.forEach(task => {
+      task.addEventListener('click', () => {
+        if (!task.classList.contains('completed')) {
+          task.classList.add('completed');
+          score += 10; // Add 10 points for each completed task
+          scoreElement.textContent = score;
+          if (score === 50) {
+            alert('🎉 Great job! You completed your productive routine!');
+          }
+        }
+      });
+    });
 
-      if (isNaN(guess) || guess < 1 || guess > 100) {
-        message.textContent = "Please enter a valid number between 1 and 100.";
-        return;
-      }
-
-      attempts++;
-      if (guess === randomNumber) {
-        message.textContent = `🎉 Congratulations! You guessed the number in ${attempts} attempts.`;
-        message.style.color = "#28a745";
-      } else if (guess < randomNumber) {
-        message.textContent = "Too low! Try again.";
-        message.style.color = "#dc3545";
-      } else {
-        message.textContent = "Too high! Try again.";
-        message.style.color = "#dc3545";
-      }
+    function resetGame() {
+      tasks.forEach(task => task.classList.remove('completed'));
+      score = 0;
+      scoreElement.textContent = score;
     }
   </script>
 </body>
